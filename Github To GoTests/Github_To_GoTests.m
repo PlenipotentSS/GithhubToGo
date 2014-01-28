@@ -28,6 +28,7 @@
 
 - (void)testExample
 {
+    //test option here
     XCTFail(@"No implementation for \"%s\"", __PRETTY_FUNCTION__);
 }
 

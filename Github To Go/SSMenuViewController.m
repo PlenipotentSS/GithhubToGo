@@ -31,6 +31,7 @@
     
     UINavigationController *detailNav = (UINavigationController *)[self.storyboard instantiateViewControllerWithIdentifier:@"detail"];
     self.detailViewController = detailNav;
+    self.menuController.detailViewController = [[detailNav viewControllers] firstObject];
     
     self.detailViewController.navigationController.navigationBar.hidden = NO;
     

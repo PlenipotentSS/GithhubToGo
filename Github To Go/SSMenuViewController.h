@@ -13,6 +13,6 @@
 @interface SSMenuViewController : UIViewController
 
 @property (strong, nonatomic) UINavigationController *detailViewController;
-@property (strong, nonatomic) UINavigationController *menuController;
+@property (strong, nonatomic) SSMasterViewController *menuController;
 
 @end

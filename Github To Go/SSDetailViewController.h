@@ -7,12 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+@class SSMenuViewController;
 
 @interface SSDetailViewController : UIViewController <UISplitViewControllerDelegate>
 
 @property (strong, nonatomic) id detailItem;
 
 @property (weak, nonatomic) IBOutlet UIWebView *detailWebView;
+
+
+@property (nonatomic) SSMenuViewController *theSplitController;
 
 - (void)configureView;
 

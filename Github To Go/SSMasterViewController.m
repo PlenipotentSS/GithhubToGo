@@ -9,11 +9,13 @@
 #import "SSMasterViewController.h"
 #import "SSNetworkController.h"
 #import "SSDetailViewController.h"
+#import "SSMenuListTableView.h"
+#import "SSMenuViewController.h"
 
 @interface SSMasterViewController () <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
 
 @property (nonatomic) NSArray *repos;
-@property (nonatomic) IBOutlet UITableView *theTableView;
+@property (nonatomic) IBOutlet SSMenuListTableView *theTableView;
 @property (nonatomic) IBOutlet UITextField *searchField;
 
 @end
@@ -36,20 +38,13 @@
     self.repos = [[NSArray alloc] init];
     self.searchField.delegate = self;
     self.theTableView.delegate = self;
+    self.theTableView.dataSource = self;
     
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         self.detailViewController = (SSDetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
+        
     }
-}
-
--(void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    [self.theTableView reloadData];
-}
-
--(void) arrayFromSearch:(NSArray *)repoArray {
-    self.repos = repoArray;
-    [self.theTableView reloadData];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(touchesBeganOnTableView) name:@"TouchOccurredOnTableView" object:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -60,26 +55,59 @@
 
 #pragma mark -UITextFieldDelegate
 -(BOOL)textFieldShouldReturn:(UITextField *)textField {
-    NSArray *repoSearch = [[SSNetworkController sharedController] reposForSearchString:textField.text];
-    if ([repoSearch count] > 0) {
-        self.repos = repoSearch;
-        [self.theTableView reloadData];
-        self.detailViewController.detailItem = self.repos[0];
-        [self.detailViewController configureView];
-        [textField resignFirstResponder];
+    if ([textField.text length] > 0) {
+        NSArray *repoSearch = [[SSNetworkController sharedController] reposForSearchString:textField.text];
+        if ([repoSearch count] > 0) {
+            self.repos = repoSearch;
+            [self.theTableView reloadData];
+            self.detailViewController.detailItem = self.repos[0];
+            [self.detailViewController configureView];
+            [textField resignFirstResponder];
+        }
+        return YES;
     }
-    return YES;
+    return NO;
 }
 
 -(void)textFieldDidBeginEditing:(UITextField *)textField {
     textField.textAlignment = NSTextAlignmentLeft;
+    [UIView animateWithDuration:.4f animations:^{
+        textField.backgroundColor = [UIColor groupTableViewBackgroundColor];
+        if ([[UIDevice currentDevice] userInterfaceIdiom] != UIUserInterfaceIdiomPad) {
+            textField.frame = CGRectMake(20, 20, CGRectGetWidth(self.view.frame)-40, CGRectGetHeight(textField.frame));
+            [self.theSplitController shiftDetailToHideFull];
+        }
+    }];
 }
 
 -(void)textFieldDidEndEditing:(UITextField *)textField {
-    textField.textAlignment = NSTextAlignmentCenter;
+    [self shrinkSearchField];
+    if ([[UIDevice currentDevice] userInterfaceIdiom] != UIUserInterfaceIdiomPad) {
+        [self.theSplitController shiftDetailToPartialHide];
+    } else {
+    }
 }
 
+#pragma mark UIResponder to touches
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"TouchOccurredOnTableView" object:nil];
+}
 
+-(void)touchesBeganOnTableView {
+    if ([self.searchField isFirstResponder]) {
+        [self.searchField resignFirstResponder];
+    }
+}
+
+-(void) shrinkSearchField {
+    self.searchField.textAlignment = NSTextAlignmentCenter;
+    [UIView animateWithDuration:.4f animations:^{
+        self.searchField.backgroundColor = [UIColor lightGrayColor];
+        if ([[UIDevice currentDevice] userInterfaceIdiom] != UIUserInterfaceIdiomPad) {
+            self.searchField.frame = CGRectMake(20, 20, .8*CGRectGetWidth(self.view.frame)-40, CGRectGetHeight(self.searchField.frame));
+        }
+    }];
+}
 
 #pragma mark - Table View
 
@@ -97,26 +125,10 @@
 {
     UITableViewCell *cell;
     cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
-    NSLog(@"hello?");
     NSDictionary *object = self.repos[indexPath.row];
     cell.textLabel.text = [object objectForKey:@"name"];
     
     return cell;
-}
-
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
-    }
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -124,16 +136,11 @@
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         NSDate *object = self.repos[indexPath.row];
         self.detailViewController.detailItem = object;
-    }
-}
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    if ([[segue identifier] isEqualToString:@"showDetail"]) {
-        NSIndexPath *indexPath = [self.theTableView indexPathForSelectedRow];
+    } else {
         NSDate *object = self.repos[indexPath.row];
-        [[segue destinationViewController] setDetailItem:object];
+        self.detailViewController.detailItem = object;
+        [self.detailViewController configureView];
+        [self.theSplitController shiftDetailToShowFull];
     }
 }
-
 @end

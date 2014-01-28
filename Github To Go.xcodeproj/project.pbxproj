@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D23C966018977B1300BC207E /* SSMenuListTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = D23C965F18977B1300BC207E /* SSMenuListTableView.m */; };
 		D265DFF41896D1E300E8A68F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D265DFF31896D1E300E8A68F /* Foundation.framework */; };
 		D265DFF61896D1E300E8A68F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D265DFF51896D1E300E8A68F /* CoreGraphics.framework */; };
 		D265DFF81896D1E300E8A68F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D265DFF71896D1E300E8A68F /* UIKit.framework */; };
@@ -38,6 +39,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D23C965E18977B1300BC207E /* SSMenuListTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSMenuListTableView.h; sourceTree = "<group>"; };
+		D23C965F18977B1300BC207E /* SSMenuListTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSMenuListTableView.m; sourceTree = "<group>"; };
 		D265DFF01896D1E300E8A68F /* Github To Go.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Github To Go.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D265DFF31896D1E300E8A68F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D265DFF51896D1E300E8A68F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -90,6 +93,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D23C966118977B1700BC207E /* View */ = {
+			isa = PBXGroup;
+			children = (
+				D23C965E18977B1300BC207E /* SSMenuListTableView.h */,
+				D23C965F18977B1300BC207E /* SSMenuListTableView.m */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
 		D265DFE71896D1E300E8A68F = {
 			isa = PBXGroup;
 			children = (
@@ -127,6 +139,7 @@
 				D265E0031896D1E300E8A68F /* SSAppDelegate.m */,
 				D265E0051896D1E300E8A68F /* Main_iPhone.storyboard */,
 				D265E0081896D1E300E8A68F /* Main_iPad.storyboard */,
+				D23C966118977B1700BC207E /* View */,
 				D265E0321896D31100E8A68F /* Controller */,
 				D265E0311896D30900E8A68F /* Model */,
 				D265E0111896D1E300E8A68F /* Images.xcassets */,
@@ -288,6 +301,7 @@
 				D265E0041896D1E300E8A68F /* SSAppDelegate.m in Sources */,
 				D265E0001896D1E300E8A68F /* main.m in Sources */,
 				D265E0301896D30000E8A68F /* SSNetworkController.m in Sources */,
+				D23C966018977B1300BC207E /* SSMenuListTableView.m in Sources */,
 				D265E07F189717CC00E8A68F /* SSMenuViewController.m in Sources */,
 				D265E00D1896D1E300E8A68F /* SSMasterViewController.m in Sources */,
 				D265E0101896D1E300E8A68F /* SSDetailViewController.m in Sources */,

@@ -7,11 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@class SSDetailViewController;
+#import "SSDetailViewController.h"
+@class SSMenuViewController;
 
 @interface SSMasterViewController : UIViewController
 
-@property (strong, nonatomic) SSDetailViewController *detailViewController;
+@property (nonatomic) SSDetailViewController *detailViewController;
+@property (nonatomic) SSMenuViewController *theSplitController;
 
 @end

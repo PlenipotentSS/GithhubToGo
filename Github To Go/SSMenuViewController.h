@@ -7,12 +7,22 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SSDetailViewController.h"
-#import "SSMasterViewController.h"
+
+typedef enum CoverState{
+    DetailViewCompletelyHidden,
+    DetailViewMostlyHidden,
+    DetailViewCompletelyVisible
+}CoverState;
 
 @interface SSMenuViewController : UIViewController
 
+@property (nonatomic) CoverState viewCover;
+
 @property (strong, nonatomic) UINavigationController *detailViewController;
-@property (strong, nonatomic) SSMasterViewController *menuController;
+@property (strong, nonatomic) UINavigationController *menuController;
+
+-(void)shiftDetailToHideFull;
+-(void)shiftDetailToPartialHide;
+-(void)shiftDetailToShowFull;
 
 @end

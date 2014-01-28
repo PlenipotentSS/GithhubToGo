@@ -7,6 +7,10 @@
 //
 
 #import "SSMenuViewController.h"
+#import "SSDetailViewController.h"
+#import "SSMasterViewController.h"
+
+#define Menu_Offset 40.f
 
 @interface SSMenuViewController () <UIGestureRecognizerDelegate>
 
@@ -26,21 +30,40 @@
 {
     [super viewDidLoad];
 
+    //setup navigation controller pointers
+    [self setupSubNavControllers];
+    
+    //setup pan gesture recognizers
+    [self setupPanGesture];
+    
+    //set the current relationship cover
+    self.viewCover = DetailViewCompletelyVisible;
+
+}
+
+-(void) setupSubNavControllers {
     self.menuController = [self.storyboard instantiateViewControllerWithIdentifier:@"menu"];
     [self.view addSubview:self.menuController.view];
+    SSMasterViewController *menuVC = (SSMasterViewController*)[[self.menuController viewControllers] firstObject];
     
-    UINavigationController *detailNav = (UINavigationController *)[self.storyboard instantiateViewControllerWithIdentifier:@"detail"];
-    self.detailViewController = detailNav;
-    self.menuController.detailViewController = [[detailNav viewControllers] firstObject];
+    self.menuController.view.frame = CGRectMake(-Menu_Offset, 0.f, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame));
+    
+    self.detailViewController = (UINavigationController *)[self.storyboard instantiateViewControllerWithIdentifier:@"detail"];
+    [self.view addSubview:self.detailViewController.view];
+    self.detailViewController.view.frame = self.view.frame;
+    
+    SSDetailViewController *detailVC = (SSDetailViewController*)[[self.detailViewController viewControllers] firstObject];
+    
+    [menuVC setDetailViewController:detailVC];
+    [menuVC setTheSplitController:self];
+    [detailVC setTheSplitController:self];
     
     self.detailViewController.navigationController.navigationBar.hidden = NO;
     
     [self addChildViewController:self.detailViewController];
     self.detailViewController.view.frame = self.view.frame;
-    [self.view addSubview:self.detailViewController.view];
     [self.detailViewController didMoveToParentViewController:self];
     
-    [self setupPanGesture];
     [self.detailViewController.view.layer setShadowOpacity:0.8f];
     [self.detailViewController.view.layer setShadowOffset:CGSizeMake(-1,0)];
 }
@@ -56,6 +79,30 @@
     [self.detailViewController.view addGestureRecognizer:pan];
 }
 
+#pragma mark - top view controller motions from menu
+-(void)shiftDetailToHideFull {
+    [UIView animateWithDuration:.4f animations:^{
+        self.detailViewController.view.frame= CGRectMake(CGRectGetWidth(self.view.frame), 0.f, CGRectGetWidth(self.detailViewController.view.frame), CGRectGetHeight(self.detailViewController.view.frame));
+        self.menuController.view.frame = CGRectMake(0, 0.f, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame));
+    }];
+    self.viewCover = DetailViewCompletelyHidden;
+}
+
+-(void)shiftDetailToPartialHide {
+    [UIView animateWithDuration:.4f animations:^{
+        self.detailViewController.view.frame= CGRectMake(CGRectGetWidth(self.view.frame)*.8, 0.f, CGRectGetWidth(self.detailViewController.view.frame), CGRectGetHeight(self.detailViewController.view.frame));
+        self.menuController.view.frame = CGRectMake(0, 0.f, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame));
+    }];
+    self.viewCover = DetailViewMostlyHidden;
+}
+
+-(void)shiftDetailToShowFull {
+    [UIView animateWithDuration:.4f animations:^{
+        self.detailViewController.view.frame= CGRectMake(0.f, 0.f, CGRectGetWidth(self.detailViewController.view.frame), CGRectGetHeight(self.detailViewController.view.frame));
+        self.menuController.view.frame = CGRectMake(-Menu_Offset, 0.f, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame));
+    }];
+    self.viewCover = DetailViewCompletelyVisible;
+}
 
 #pragma mark - pan Gesture Actions
 -(void)slidePanel:(id) sender {
@@ -63,8 +110,7 @@
     
     //CGPoint velocity = [pan velocityInView:pan.view];
     CGPoint translation = [pan translationInView:self.view];
-    
-    //NSLog(@"x: %f y: %f",translation.x,translation.y);
+    CGPoint velocity = [pan velocityInView:self.view];
     
     if (pan.state ==UIGestureRecognizerStateChanged) {
         if (self.detailViewController.view.frame.origin.x+translation.x >= 0) {
@@ -73,36 +119,34 @@
             [(UIPanGestureRecognizer*)sender setTranslation:CGPointMake(0, 0) inView:self.view];
         }
         
+        
+
+        if (self.menuController.view.frame.origin.x >= -Menu_Offset && self.menuController.view.frame.origin.x <= 0.f) {
+            CGFloat menuTranslation = self.menuController.view.center.x+translation.x*Menu_Offset/320;
+            if (menuTranslation > self.view.center.x) {
+                menuTranslation = self.view.center.x;
+            }
+            self.menuController.view.center = CGPointMake(menuTranslation, self.detailViewController.view.center.y);
+        }
     }
     if (pan.state == UIGestureRecognizerStateEnded) {
-        if (self.detailViewController.view.frame.origin.x <= self.view.frame.size.width/2) {
+        if ((self.detailViewController.view.frame.origin.x <= self.view.frame.size.width/2 && velocity.x < 1200.f) || velocity.x <-1200.f ) {
             [UIView animateWithDuration:.4f animations:^{
                 self.detailViewController.view.center = self.view.center;
-                //[self.detailViewController.view setAlpha:1];
+                self.menuController.view.frame = CGRectMake(-Menu_Offset, 0.f, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame));
             }];
-        } else if (self.detailViewController.view.frame.origin.x > self.view.frame.size.width/2) {
+            self.viewCover = DetailViewCompletelyVisible;
+        } else if (velocity.x >= 1200.f || self.detailViewController.view.frame.origin.x > self.view.frame.size.width/2) {
             
             [UIView animateWithDuration:.4f animations:^{
                 self.detailViewController.view.frame = CGRectMake(CGRectGetWidth(self.view.frame)*0.8f, CGRectGetMinY(self.view.frame), CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame));
-                //[self.detailViewController.view setAlpha:.2];
-            } completion:^(BOOL finished){
-                UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(slideBack:)];
-                [self.detailViewController.view addGestureRecognizer:tap];
+                self.menuController.view.frame = CGRectMake(0.f, 0.f, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame));
             }];
             
+            self.viewCover = DetailViewMostlyHidden;
         }
     }
 }
-
--(void)slideBack:(id)sender {
-    [UIView animateWithDuration:.4f animations:^{
-        self.detailViewController.view.frame = self.view.frame;
-        //[self.detailViewController.view setAlpha:1];
-    } completion:^(BOOL finished) {
-        [self.detailViewController.view removeGestureRecognizer:(UITapGestureRecognizer*)sender];
-    }];
-}
-
 
 - (void)didReceiveMemoryWarning
 {

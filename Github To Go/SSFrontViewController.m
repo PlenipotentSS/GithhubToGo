@@ -6,16 +6,18 @@
 //  Copyright (c) 2014 Steven Stevenson. All rights reserved.
 //
 
-#import "SSDetailViewController.h"
-#import "SSMenuViewController.h"
+#import "SSFrontViewController.h"
+#import "SSSplitViewController.h"
 
-@interface SSDetailViewController () 
+#import "SSGitHubRepo.h"
+
+@interface SSFrontViewController () 
 
 @property (strong, nonatomic) UIPopoverController *masterPopoverController;
 - (void)configureView;
 @end
 
-@implementation SSDetailViewController
+@implementation SSFrontViewController
 
 #pragma mark - Managing the detail item
 
@@ -33,23 +35,22 @@
     }        
 }
 
+-(void)viewWillDisappear:(BOOL)animated {
+}
+
 - (void)configureView
 {
     // Update the user interface for the detail item.
-
+    
     if (self.detailItem) {
-        NSString *htmlURLString = [self.detailItem objectForKey:@"html_url"];
+        NSString *htmlURLString = [self.detailItem html_url];
         [self.detailWebView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:htmlURLString]]];
-        [self.navigationItem setTitle:[self.detailItem objectForKey:@"name"]];
-    }
-}
-
--(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    if (toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft ||
-        toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-        self.view.frame = CGRectMake(CGRectGetMinX(self.view.frame), CGRectGetMinY(self.view.frame), CGRectGetHeight(self.view.bounds), CGRectGetWidth(self.view.bounds));
-    } else {
-        self.view.frame = CGRectMake(CGRectGetMinX(self.view.frame), CGRectGetMinY(self.view.frame), CGRectGetHeight(self.view.bounds), CGRectGetWidth(self.view.bounds));
+        if ([self.detailItem isKindOfClass:[SSGitHubRepo class]]) {
+            SSGitHubRepo *repo = (SSGitHubRepo*)self.detailItem;
+            [self.navigationItem setTitle:[repo title]];
+        } else {
+            [self.navigationItem setTitle:[self.detailItem name]];
+        }
     }
 }
 
@@ -87,13 +88,13 @@
     self.masterPopoverController = nil;
 }
 
+
 #pragma mark - Split Controller (custom menu)
 -(void)showMenu {
-    if (self.theSplitController.viewCover == DetailViewCompletelyVisible) {
-        [self.theSplitController shiftDetailToPartialHide];
-    } else {
-        [self.theSplitController shiftDetailToShowFull];
+    if ([self.theSplitController menuStateInView] == MenuCompletelyHidden) {
+        [self.theSplitController showMenuSplit];
+    } else if ([self.theSplitController menuStateInView] == MenuOpened) {
+        [self.theSplitController hideMenu];
     }
 }
-
 @end

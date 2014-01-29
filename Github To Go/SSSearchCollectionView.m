@@ -1,27 +1,24 @@
 //
-//  SSMenuListTableView.m
+//  SSSearchCollectionView.m
 //  Github To Go
 //
-//  Created by Stevenson on 1/27/14.
+//  Created by Stevenson on 1/28/14.
 //  Copyright (c) 2014 Steven Stevenson. All rights reserved.
 //
 
-#import "SSMenuListTableView.h"
-@interface SSMenuListTableView()
+#import "SSSearchCollectionView.h"
 
-@property (nonatomic) BOOL keyboardAppeared;
-
-@end
-
-@implementation SSMenuListTableView
+@implementation SSSearchCollectionView
 
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
+        // Initialization code
     }
     return self;
 }
+
 
 #pragma mark UIResponder to touches
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {

@@ -46,4 +46,26 @@
     return [NSArray new];
 }
 
+-(NSArray *)usersForSearchString: (NSString*) searchString {
+    searchString = [searchString stringByReplacingOccurrencesOfString:@" " withString:@"%2"];
+    searchString  = [NSString stringWithFormat:@"https://api.github.com/search/users?q=%@&sort=stars", searchString];
+    NSURL *url = [NSURL URLWithString:searchString];
+    NSError *error;
+    NSData *searchData = [NSData dataWithContentsOfURL:url options:0 error:&error];
+    if (!error) {
+        NSDictionary *searchDict = [NSJSONSerialization JSONObjectWithData:searchData options:NSJSONReadingMutableContainers error:&error];
+        if (!error) {
+            
+            return [searchDict objectForKey:@"items"];
+        } else {
+            
+            NSLog(@"error: %@",error);
+        }
+    } else {
+        NSLog(@"error: %@",error);
+    }
+    
+    return [NSArray new];
+}
+
 @end

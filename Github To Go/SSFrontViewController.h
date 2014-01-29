@@ -7,16 +7,17 @@
 //
 
 #import <UIKit/UIKit.h>
-@class SSMenuViewController;
+#import "SSGitHubUser.h"
+@class SSSplitViewController;
 
-@interface SSDetailViewController : UIViewController <UISplitViewControllerDelegate>
+@interface SSFrontViewController : UIViewController <UISplitViewControllerDelegate>
 
-@property (strong, nonatomic) id detailItem;
+@property (strong, nonatomic) SSGitHubUser *detailItem;
 
 @property (weak, nonatomic) IBOutlet UIWebView *detailWebView;
 
 
-@property (nonatomic) SSMenuViewController *theSplitController;
+@property (nonatomic) SSSplitViewController *theSplitController;
 
 - (void)configureView;
 

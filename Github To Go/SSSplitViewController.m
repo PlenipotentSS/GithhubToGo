@@ -44,12 +44,14 @@
 -(void) setupSubNavControllers {
     self.backViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"menu"];
     [self.view addSubview:self.backViewController.view];
+    [self addChildViewController:self.backViewController];
     SSBackViewController *menuVC = (SSBackViewController*)[[self.backViewController viewControllers] firstObject];
     
     //self.menuController.view.frame = CGRectMake(-Menu_Offset, 0.f, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame));
     
     self.frontViewController = (UINavigationController *)[self.storyboard instantiateViewControllerWithIdentifier:@"detail"];
     [self.view addSubview:self.frontViewController.view];
+    [self addChildViewController:self.frontViewController];
     
     SSFrontViewController *detailVC = (SSFrontViewController*)[[self.frontViewController viewControllers] firstObject];
     
@@ -131,19 +133,10 @@
     }
     if (pan.state == UIGestureRecognizerStateEnded) {
         if ((self.frontViewController.view.frame.origin.x <= self.view.frame.size.width/2 && velocity.x < 1200.f) || velocity.x <-1200.f ) {
-            [UIView animateWithDuration:.4f animations:^{
-                self.frontViewController.view.center = self.view.center;
-                self.backViewController.view.frame = CGRectMake(-Menu_Offset, 0.f, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame));
-            }];
+            [self hideMenu];
             self.menuStateInView = MenuCompletelyHidden;
         } else if (velocity.x >= 1200.f || self.frontViewController.view.frame.origin.x > self.view.frame.size.width/2) {
-            
-            [UIView animateWithDuration:.4f animations:^{
-                self.frontViewController.view.frame = CGRectMake(CGRectGetWidth(self.view.frame)*0.8f, CGRectGetMinY(self.view.frame), CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame));
-                self.backViewController.view.frame = CGRectMake(0.f, 0.f, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame));
-            }];
-            
-            self.menuStateInView = MenuOpened;
+            [self showMenuSplit];
         }
     }
 }

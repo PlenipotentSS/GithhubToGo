@@ -20,4 +20,9 @@
 }
 
 
+-(void) configureCell {
+    self.layer.cornerRadius = 5;
+    self.layer.masksToBounds = YES;
+}
+
 @end

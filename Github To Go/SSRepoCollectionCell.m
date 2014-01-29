@@ -19,5 +19,10 @@
     return self;
 }
 
+-(void) configureCell {
+    self.userImageView.layer.cornerRadius = 5;
+    self.userImageView.layer.masksToBounds = YES;
+}
+
 @end
    

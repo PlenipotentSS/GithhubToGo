@@ -243,7 +243,7 @@
             }
         } else {
             switch (indexPath.row) {
-                case 0: //one large
+                case 0: //small
                     return CGSizeMake(200, 200);
                     break;
                     
@@ -277,6 +277,7 @@
         } else if (user.imageURLString) {
             [self loadUserAvatarAtIndex:indexPath];
         }
+        [cell configureCell];
         [cell.name setText:[user name]];
         return cell;
     } else {
@@ -287,6 +288,7 @@
         } else if (user.imageURLString) {
             [self loadUserAvatarAtIndex:indexPath];
         }
+        [cell configureCell];
         [cell.title setText:[user title]];
         [cell.title sizeThatFits:cell.title.frame.size];
         return cell;
@@ -322,35 +324,14 @@
         if (self.isSearchingUsers) {
             SSGitHubUser *user = [self.usersArray objectAtIndex:indexPath.row];
             [user downloadUserAvatar];
-            UICollectionViewCell* cell = (UICollectionViewCell*)[self.theCollectionView cellForItemAtIndexPath:indexPath];
-            if ([self.theCollectionView.visibleCells containsObject:[self.theCollectionView cellForItemAtIndexPath:indexPath]]) {
-                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                    if (self.isSearchingUsers) {
-                        SSUserCollectionAvatarCell *customCell = (SSUserCollectionAvatarCell*)cell;
-                        customCell.userImageView.image = [user userImage];
-                    } else {
-                        SSRepoCollectionCell *customCell = (SSRepoCollectionCell*)cell;
-                        customCell.userImageView.image = [user userImage];
-                    }
-                    [self.theCollectionView reloadItemsAtIndexPaths:@[indexPath]];
-                }];
-            }
         } else {
-            SSGitHubRepo *user = [self.repos objectAtIndex:indexPath.row];
-            [user downloadUserAvatar];
-            UICollectionViewCell* cell = (UICollectionViewCell*)[self.theCollectionView cellForItemAtIndexPath:indexPath];
-            if ([self.theCollectionView.visibleCells containsObject:[self.theCollectionView cellForItemAtIndexPath:indexPath]]) {
-                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                    if (self.isSearchingUsers) {
-                        SSUserCollectionAvatarCell *customCell = (SSUserCollectionAvatarCell*)cell;
-                        customCell.userImageView.image = [user userImage];
-                    } else {
-                        SSRepoCollectionCell *customCell = (SSRepoCollectionCell*)cell;
-                        customCell.userImageView.image = [user userImage];
-                    }
-                    [self.theCollectionView reloadItemsAtIndexPaths:@[indexPath]];
-                }];
-            }
+            SSGitHubRepo *repo = [self.repos objectAtIndex:indexPath.row];
+            [repo downloadUserAvatar];
+        }
+        if ([self.theCollectionView.visibleCells containsObject:[self.theCollectionView cellForItemAtIndexPath:indexPath]]) {
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                [self.theCollectionView reloadItemsAtIndexPaths:@[indexPath]];
+            }];
         }
     }];
 }

@@ -13,4 +13,6 @@
 @property (nonatomic) IBOutlet UIImageView *userImageView;
 @property (nonatomic) IBOutlet UILabel *title;
 
+-(void)configureCell;
+
 @end

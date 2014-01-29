@@ -57,17 +57,20 @@
     
     self.searches = [[NSMutableArray alloc] initWithObjects:@"",@"", nil];
     
+    self.downloadImagesQueue = [NSOperationQueue new];
+    
     self.searchSwitch.selectedSegmentIndex= 1;
     self.searchSwitch.layer.cornerRadius = 2;
     self.searchSwitch.layer.masksToBounds = YES;
     [self.searchSwitch addTarget:self action:@selector(switchSearchType:) forControlEvents:UIControlEventValueChanged];
+    self.searchSwitch.center = CGPointMake(self.searchField.center.x, self.searchSwitch.center.y);
     
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         self.detailViewController = (SSFrontViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
         
     }
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(touchesBeganOnTableView) name:@"TouchOccurredOnTableView" object:nil];
-}
+}\
 
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
@@ -87,9 +90,11 @@
 -(void)switchSearchType:(id)sender{
     UISegmentedControl *thisSwitch = (UISegmentedControl*)sender;
     if ( thisSwitch.selectedSegmentIndex == 0 ) {
+        self.theCollectionView.frame = CGRectMake(CGRectGetMinX(self.theCollectionView.frame), CGRectGetMinY(self.theCollectionView.frame), 260.f, CGRectGetHeight(self.theCollectionView.frame));
         self.searchField.text = self.searches[0];
         self.isSearchingUsers = YES;
     } else {
+        self.theCollectionView.frame = CGRectMake(CGRectGetMinX(self.theCollectionView.frame), CGRectGetMinY(self.theCollectionView.frame), 320.f, CGRectGetHeight(self.theCollectionView.frame));
         self.searchField.text = self.searches[1];
         self.isSearchingUsers = NO;
     }
@@ -134,6 +139,7 @@
     return NO;
 }
 
+#pragma mark - array population
 -(void)createUsersFromArray:(NSArray*)searchArray
 {
     [self.usersArray removeAllObjects];
@@ -159,6 +165,7 @@
     }
 }
 
+#pragma mark - text field controls
 -(void)textFieldDidBeginEditing:(UITextField *)textField
 {
     if ([[UIDevice currentDevice] userInterfaceIdiom] != UIUserInterfaceIdiomPad) {
@@ -177,13 +184,8 @@
     }
 }
 
-#pragma mark UIResponder to touches
--(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+-(void)touchesBeganOnTableView
 {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"TouchOccurredOnTableView" object:nil];
-}
-
--(void)touchesBeganOnTableView {
     if ([self.searchField isFirstResponder]) {
         [self.searchField resignFirstResponder];
         self.searchField.textAlignment = NSTextAlignmentCenter;
@@ -191,26 +193,27 @@
     }
 }
 
--(void) growSearchField {
+#pragma mark - Search Bar Animations
+-(void) growSearchField
+{
     [self.theSplitController showMenuFullScreen];
     self.searchField.textAlignment = NSTextAlignmentLeft;
     [UIView animateWithDuration:.4f animations:^{
         self.searchField.backgroundColor = [UIColor groupTableViewBackgroundColor];
         if ([[UIDevice currentDevice] userInterfaceIdiom] != UIUserInterfaceIdiomPad) {
             self.searchField.frame = CGRectMake(20, 20, CGRectGetWidth(self.view.frame)-40, CGRectGetHeight(self.searchField.frame));
-            self.searchSwitch.center = CGPointMake(self.searchField.center.x, self.searchSwitch.center.y);
         }
     }];
 }
 
--(void) shrinkSearchField {
+-(void) shrinkSearchField
+{
     [self.theSplitController showMenuSplit];
     self.searchField.textAlignment = NSTextAlignmentCenter;
     [UIView animateWithDuration:.4f animations:^{
         self.searchField.backgroundColor = [UIColor lightGrayColor];
         if ([[UIDevice currentDevice] userInterfaceIdiom] != UIUserInterfaceIdiomPad) {
             self.searchField.frame = CGRectMake(20, 20, .8*CGRectGetWidth(self.view.frame)-40, CGRectGetHeight(self.searchField.frame));
-            self.searchSwitch.center = CGPointMake(self.searchField.center.x, self.searchSwitch.center.y);
         }
     }];
 }
@@ -228,28 +231,29 @@
 -(CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if (self.isSearchingUsers){
-        switch (indexPath.row) {
-            case 0: //one large
-                return CGSizeMake(100, 100);
-                break;
-                
-            case 1: //big left
-                return CGSizeMake(60, 60);
-                break;
-                
-            case 2: //small right
-                return CGSizeMake(60, 60);
-                break;
-                
-            case 3: //small right
-                return CGSizeMake(60, 60);
-                break;
-            default:
-                return CGSizeMake(60, 60);
-                break;
+        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+            switch (indexPath.row) {
+                case 0: //one large
+                    return CGSizeMake(210, 210);
+                    break;
+
+                default:
+                    return CGSizeMake(140, 140);
+                    break;
+            }
+        } else {
+            switch (indexPath.row) {
+                case 0: //one large
+                    return CGSizeMake(200, 200);
+                    break;
+                    
+                default:
+                    return CGSizeMake(120, 120);
+                    break;
+            }
         }
     } else {
-        return CGSizeMake(320.f,60.f);
+        return CGSizeMake(260.f,60.f);
     }
 }
 
@@ -283,24 +287,30 @@
             [self loadUserAvatarAtIndex:indexPath];
         }
         [cell.title setText:[user title]];
+        [cell.title sizeThatFits:cell.title.frame.size];
         return cell;
     }
 }
 
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    NSArray *dataArray;
-    if (self.isSearchingUsers) {
-        dataArray = self.usersArray;
-    } else {
-        dataArray = self.repos;
-    }
-    
-    SSGitHubUser *object = dataArray[indexPath.row];
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        self.detailViewController.detailItem = object;
+        if (self.isSearchingUsers) {
+            SSGitHubUser *object = self.usersArray[indexPath.row];
+            self.detailViewController.detailItem = object;
+        } else {
+            SSGitHubRepo *object = self.repos[indexPath.row];
+            self.detailViewController.detailItem = object;
+        }
     } else {
-        self.detailViewController.detailItem = object;
+        if (self.isSearchingUsers) {
+            SSGitHubUser *object = self.usersArray[indexPath.row];
+            self.detailViewController.detailItem = object;
+        } else {
+            SSGitHubRepo *object = self.repos[indexPath.row];
+            self.detailViewController.detailItem = object;
+        }
         [self.detailViewController configureView];
+        [self.theSplitController hideMenu];
     }
 }
 
@@ -308,20 +318,38 @@
 #pragma mark - NSOperationQueue image load
 -(void)loadUserAvatarAtIndex:(NSIndexPath*) indexPath {
     [self.downloadImagesQueue addOperationWithBlock:^{
-        SSGitHubUser *user = [self.usersArray objectAtIndex:indexPath.row];
-        [user downloadUserAvatar];
-        UICollectionViewCell* cell = (UICollectionViewCell*)[self.theCollectionView cellForItemAtIndexPath:indexPath];
-        if ([self.theCollectionView.visibleCells containsObject:[self.theCollectionView cellForItemAtIndexPath:indexPath]]) {
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                if (self.isSearchingUsers) {
-                    SSUserCollectionAvatarCell *customCell = (SSUserCollectionAvatarCell*)cell;
-                    customCell.userImageView.image = [user userImage];
-                } else {
-                    SSRepoCollectionCell *customCell = (SSRepoCollectionCell*)cell;
-                    customCell.userImageView.image = [user userImage];
-                }
-                [self.theCollectionView reloadItemsAtIndexPaths:@[indexPath]];
-            }];
+        if (self.isSearchingUsers) {
+            SSGitHubUser *user = [self.usersArray objectAtIndex:indexPath.row];
+            [user downloadUserAvatar];
+            UICollectionViewCell* cell = (UICollectionViewCell*)[self.theCollectionView cellForItemAtIndexPath:indexPath];
+            if ([self.theCollectionView.visibleCells containsObject:[self.theCollectionView cellForItemAtIndexPath:indexPath]]) {
+                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                    if (self.isSearchingUsers) {
+                        SSUserCollectionAvatarCell *customCell = (SSUserCollectionAvatarCell*)cell;
+                        customCell.userImageView.image = [user userImage];
+                    } else {
+                        SSRepoCollectionCell *customCell = (SSRepoCollectionCell*)cell;
+                        customCell.userImageView.image = [user userImage];
+                    }
+                    [self.theCollectionView reloadItemsAtIndexPaths:@[indexPath]];
+                }];
+            }
+        } else {
+            SSGitHubRepo *user = [self.repos objectAtIndex:indexPath.row];
+            [user downloadUserAvatar];
+            UICollectionViewCell* cell = (UICollectionViewCell*)[self.theCollectionView cellForItemAtIndexPath:indexPath];
+            if ([self.theCollectionView.visibleCells containsObject:[self.theCollectionView cellForItemAtIndexPath:indexPath]]) {
+                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                    if (self.isSearchingUsers) {
+                        SSUserCollectionAvatarCell *customCell = (SSUserCollectionAvatarCell*)cell;
+                        customCell.userImageView.image = [user userImage];
+                    } else {
+                        SSRepoCollectionCell *customCell = (SSRepoCollectionCell*)cell;
+                        customCell.userImageView.image = [user userImage];
+                    }
+                    [self.theCollectionView reloadItemsAtIndexPaths:@[indexPath]];
+                }];
+            }
         }
     }];
 }

@@ -64,6 +64,8 @@
     
         self.navigationItem.leftBarButtonItem = menuButton;
     }
+    
+    [self.detailWebView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"https://github.com/trending"]]];
 }
 
 - (void)didReceiveMemoryWarning

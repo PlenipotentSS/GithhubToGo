@@ -47,7 +47,7 @@
 }
 
 -(NSArray *)usersForSearchString: (NSString*) searchString {
-    searchString = [searchString stringByReplacingOccurrencesOfString:@" " withString:@"%2"];
+    searchString = [searchString stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
     searchString  = [NSString stringWithFormat:@"https://api.github.com/search/users?q=%@&sort=stars", searchString];
     NSURL *url = [NSURL URLWithString:searchString];
     NSError *error;

@@ -258,6 +258,16 @@
     }
 }
 
+-(void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+    if (fromInterfaceOrientation == UIInterfaceOrientationLandscapeLeft &&
+        fromInterfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
+        if (self.theSplitController.menuStateInView == MenuOpened) {
+            [self.theSplitController showMenuSplit];
+        }
+    }
+}
+
 -(UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
 {
     if (self.isSearchingUsers) {

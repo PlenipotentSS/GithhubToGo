@@ -30,6 +30,7 @@
 {
     //test option here
     
+    XCTAssertTrue(true, @"The description was Correct");
     //XCTFail(@"No implementation for \"%s\"", __PRETTY_FUNCTION__);
 }
 

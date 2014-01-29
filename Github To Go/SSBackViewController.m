@@ -253,6 +253,7 @@
             }
         }
     } else {
+        //uitaleivew lookalike
         return CGSizeMake(260.f,60.f);
     }
 }

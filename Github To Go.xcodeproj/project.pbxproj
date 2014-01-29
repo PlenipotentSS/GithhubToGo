@@ -30,9 +30,6 @@
 		D2D431A91898927100263948 /* SSGitHubUser.m in Sources */ = {isa = PBXBuildFile; fileRef = D2D431A81898927100263948 /* SSGitHubUser.m */; };
 		D2D431AC189892D800263948 /* SSRepoCollectionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D2D431AB189892D800263948 /* SSRepoCollectionCell.m */; };
 		D2D431B21898B86200263948 /* SSGitHubRepo.m in Sources */ = {isa = PBXBuildFile; fileRef = D2D431B11898B86200263948 /* SSGitHubRepo.m */; };
-		D2EC875F1898E60D009C7C1B /* SSiPadSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D2EC875E1898E60D009C7C1B /* SSiPadSplitViewController.m */; };
-		IYDQKWBMRKIEYEVRWSLKUDQT /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = YXIFWTDXJPPRRMDCEPMDTJHK /* QuartzCore.framework */; };
-		NPONLATPTEBRUFEBXNXFHCQQ /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = HBDITSPYVFDWQYYBDCIDIXGK /* libz.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,11 +79,6 @@
 		D2D431AB189892D800263948 /* SSRepoCollectionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSRepoCollectionCell.m; sourceTree = "<group>"; };
 		D2D431B01898B86200263948 /* SSGitHubRepo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSGitHubRepo.h; sourceTree = "<group>"; };
 		D2D431B11898B86200263948 /* SSGitHubRepo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSGitHubRepo.m; sourceTree = "<group>"; };
-		D2EC875D1898E60D009C7C1B /* SSiPadSplitViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSiPadSplitViewController.h; sourceTree = "<group>"; };
-		D2EC875E1898E60D009C7C1B /* SSiPadSplitViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSiPadSplitViewController.m; sourceTree = "<group>"; };
-		HBDITSPYVFDWQYYBDCIDIXGK /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
-		MNTBWVDMICWTEJGUAKXRYSMK /* SparkInspector.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SparkInspector.framework; path = "/Applications/Spark Inspector.app/Contents/Resources/Frameworks/SparkInspector.framework"; sourceTree = "<group>"; };
-		YXIFWTDXJPPRRMDCEPMDTJHK /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,8 +89,6 @@
 				D265DFF61896D1E300E8A68F /* CoreGraphics.framework in Frameworks */,
 				D265DFF81896D1E300E8A68F /* UIKit.framework in Frameworks */,
 				D265DFF41896D1E300E8A68F /* Foundation.framework in Frameworks */,
-				IYDQKWBMRKIEYEVRWSLKUDQT /* QuartzCore.framework in Frameworks */,
-				NPONLATPTEBRUFEBXNXFHCQQ /* libz.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -120,8 +110,6 @@
 			children = (
 				D2D431A118988A1100263948 /* SSUserCollectionAvatarCell.h */,
 				D2D431A218988A1100263948 /* SSUserCollectionAvatarCell.m */,
-				D2EC875D1898E60D009C7C1B /* SSiPadSplitViewController.h */,
-				D2EC875E1898E60D009C7C1B /* SSiPadSplitViewController.m */,
 				D2D431AA189892D800263948 /* SSRepoCollectionCell.h */,
 				D2D431AB189892D800263948 /* SSRepoCollectionCell.m */,
 				D2D431A418988BAB00263948 /* SSSearchCollectionView.h */,
@@ -156,9 +144,6 @@
 				D265DFF51896D1E300E8A68F /* CoreGraphics.framework */,
 				D265DFF71896D1E300E8A68F /* UIKit.framework */,
 				D265E0181896D1E300E8A68F /* XCTest.framework */,
-				YXIFWTDXJPPRRMDCEPMDTJHK /* QuartzCore.framework */,
-				HBDITSPYVFDWQYYBDCIDIXGK /* libz.dylib */,
-				MNTBWVDMICWTEJGUAKXRYSMK /* SparkInspector.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -334,7 +319,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D265E0041896D1E300E8A68F /* SSAppDelegate.m in Sources */,
-				D2EC875F1898E60D009C7C1B /* SSiPadSplitViewController.m in Sources */,
 				D265E0001896D1E300E8A68F /* main.m in Sources */,
 				D265E0301896D30000E8A68F /* SSNetworkController.m in Sources */,
 				D2D431A91898927100263948 /* SSGitHubUser.m in Sources */,
@@ -421,7 +405,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = "\"/Applications/Spark Inspector.app/Contents/Resources/Frameworks\"";
+				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -438,11 +422,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-framework",
-					SparkInspector,
-				);
+				OTHER_LDFLAGS = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -487,15 +467,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				FRAMEWORK_SEARCH_PATHS = "\"/Applications/Spark Inspector.app/Contents/Resources/Frameworks\"";
+				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Github To Go/Github To Go-Prefix.pch";
 				INFOPLIST_FILE = "Github To Go/Github To Go-Info.plist";
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-framework",
-					SparkInspector,
-				);
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

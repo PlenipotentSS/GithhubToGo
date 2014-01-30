@@ -16,9 +16,6 @@
 
 @property (weak, nonatomic) IBOutlet UIWebView *detailWebView;
 
-
-@property (nonatomic) SSSplitViewController *theSplitController;
-
 - (void)configureView;
 
 @end

@@ -93,10 +93,10 @@
 
 #pragma mark - Split Controller (custom menu)
 -(void)showMenu {
-    if ([self.theSplitController menuStateInView] == MenuCompletelyHidden) {
-        [self.theSplitController showMenuSplit];
-    } else if ([self.theSplitController menuStateInView] == MenuOpened) {
-        [self.theSplitController hideMenu];
+    if ([(SSSplitViewController*)self.parentViewController.parentViewController menuStateInView] == MenuCompletelyHidden) {
+        [(SSSplitViewController*)self.parentViewController.parentViewController showMenuSplit];
+    } else if ([(SSSplitViewController*)self.parentViewController.parentViewController menuStateInView] == MenuOpened) {
+        [(SSSplitViewController*)self.parentViewController.parentViewController hideMenu];
     }
 }
 @end

@@ -67,10 +67,10 @@
     
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         self.detailViewController = (SSFrontViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
-        
+
     }
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(touchesBeganOnTableView) name:@"TouchOccurredOnTableView" object:nil];
-}\
+}
 
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
@@ -170,8 +170,6 @@
 {
     if ([[UIDevice currentDevice] userInterfaceIdiom] != UIUserInterfaceIdiomPad) {
         [self growSearchField];
-    } else {
-        
     }
 }
 
@@ -179,8 +177,6 @@
 {
     if ([[UIDevice currentDevice] userInterfaceIdiom] != UIUserInterfaceIdiomPad) {
         [self shrinkSearchField];
-    } else {
-        
     }
 }
 
@@ -196,11 +192,15 @@
 #pragma mark - Search Bar Animations
 -(void) growSearchField
 {
-    [self.theSplitController showMenuFullScreen];
+    if ([[UIDevice currentDevice] userInterfaceIdiom] != UIUserInterfaceIdiomPad) {
+        [(SSSplitViewController*)self.parentViewController.parentViewController showMenuFullScreen];
+    }
     self.searchField.textAlignment = NSTextAlignmentLeft;
     [UIView animateWithDuration:.4f animations:^{
         self.searchField.backgroundColor = [UIColor groupTableViewBackgroundColor];
         if ([[UIDevice currentDevice] userInterfaceIdiom] != UIUserInterfaceIdiomPad) {
+            CGFloat percentToChange = (CGRectGetWidth(self.view.frame)-40)/self.searchSwitch.frame.size.width;
+            [self getRectForSearchSwitchWithPercent:percentToChange];
             self.searchField.frame = CGRectMake(20, 20, CGRectGetWidth(self.view.frame)-40, CGRectGetHeight(self.searchField.frame));
         }
     }];
@@ -208,16 +208,42 @@
 
 -(void) shrinkSearchField
 {
-    [self.theSplitController showMenuSplit];
+    
+    if ([[UIDevice currentDevice] userInterfaceIdiom] != UIUserInterfaceIdiomPad) {
+        [(SSSplitViewController*)self.parentViewController.parentViewController showMenuSplit];
+    }
     self.searchField.textAlignment = NSTextAlignmentCenter;
+    
+    self.searchField.backgroundColor = [UIColor lightGrayColor];
+    CGFloat newXorigin = (.8*CGRectGetWidth(self.view.frame)-40);
+    
+    CGFloat percentToChange;
+    if (newXorigin > (MAX_OPEN_SPACE-40)) {
+        percentToChange = (MAX_OPEN_SPACE-40)/self.searchSwitch.frame.size.width;
+    } else {
+        percentToChange = newXorigin/self.searchSwitch.frame.size.width;
+    }
+    
+    CGRect newSearchFieldFrame = self.searchField.frame;
+    newSearchFieldFrame.origin.x = 20.f;
+    newSearchFieldFrame.origin.y = 20.f;
+    newSearchFieldFrame.size.width  = percentToChange*CGRectGetWidth(self.searchField.frame);
     [UIView animateWithDuration:.4f animations:^{
-        self.searchField.backgroundColor = [UIColor lightGrayColor];
         if ([[UIDevice currentDevice] userInterfaceIdiom] != UIUserInterfaceIdiomPad) {
-            self.searchField.frame = CGRectMake(20, 20, .8*CGRectGetWidth(self.view.frame)-40, CGRectGetHeight(self.searchField.frame));
+
+            [self getRectForSearchSwitchWithPercent:percentToChange];
+            self.searchField.frame = newSearchFieldFrame;
         }
     }];
 }
 
+-(void) getRectForSearchSwitchWithPercent:(CGFloat) percent{
+    self.searchSwitch.frame = CGRectMake(20, self.searchSwitch.frame.origin.y, percent*self.searchSwitch.frame.size.width, CGRectGetHeight(self.searchField.frame));;
+    for (id subView in [self.searchSwitch subviews]) {
+        UIView *thisSubView = (UIView*)subView;
+        thisSubView.frame = CGRectMake(thisSubView.frame.origin.x, thisSubView.frame.origin.y, percent*thisSubView.frame.size.width, thisSubView.frame.size.height);
+    }
+}
 
 #pragma mark - UICollectionView DataSource
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
@@ -238,7 +264,7 @@
                     break;
 
                 default:
-                    return CGSizeMake(140, 140);
+                    return CGSizeMake(135, 135);
                     break;
             }
         } else {
@@ -248,23 +274,13 @@
                     break;
                     
                 default:
-                    return CGSizeMake(120, 120);
+                    return CGSizeMake(115, 115);
                     break;
             }
         }
     } else {
         //uitaleivew lookalike
-        return CGSizeMake(260.f,60.f);
-    }
-}
-
--(void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
-    if (fromInterfaceOrientation == UIInterfaceOrientationLandscapeLeft &&
-        fromInterfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
-        if (self.theSplitController.menuStateInView == MenuOpened) {
-            [self.theSplitController showMenuSplit];
-        }
+        return CGSizeMake(255.f,60.f);
     }
 }
 
@@ -323,7 +339,7 @@
             self.detailViewController.detailItem = object;
         }
         [self.detailViewController configureView];
-        [self.theSplitController hideMenu];
+        [(SSSplitViewController*)self.parentViewController.parentViewController hideMenu];
     }
 }
 

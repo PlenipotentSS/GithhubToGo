@@ -15,14 +15,7 @@
                     <view key="view" contentMode="scaleToFill" id="fkd-5H-Za2">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <subviews>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="D8q-Ng-Ylp">
-                                <rect key="frame" x="0.0" y="107" width="320" height="461"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                            </view>
-                        </subviews>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
                     </view>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                 </viewController>
@@ -42,8 +35,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Yb7-qo-mjM">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="106"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Yb7-qo-mjM">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="91"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Search" textAlignment="center" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="K8C-ho-Ruc">
@@ -65,27 +58,33 @@
                                     </segmentedControl>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="91" id="udP-F5-5gv"/>
+                                </constraints>
                             </view>
-                            <collectionView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="TRX-ml-kY4" customClass="SSSearchCollectionView">
-                                <rect key="frame" x="0.0" y="99" width="260" height="469"/>
+                            <collectionView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="TRX-ml-kY4" customClass="SSSearchCollectionView">
+                                <rect key="frame" x="0.0" y="99" width="255" height="469"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="255" id="KLv-Jj-SH6"/>
+                                </constraints>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="j4H-CO-fuV">
-                                    <size key="itemSize" width="260" height="60"/>
+                                    <size key="itemSize" width="255" height="60"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="RepoCell" id="NbM-kJ-a2P" customClass="SSRepoCollectionCell">
-                                        <rect key="frame" x="0.0" y="0.0" width="260" height="60"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="255" height="60"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="260" height="60"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="255" height="60"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CPR-FU-JMe">
-                                                    <rect key="frame" x="10" y="1" width="60" height="60"/>
+                                                    <rect key="frame" x="10" y="1" width="55" height="60"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 </imageView>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Repo Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ryA-P2-TGh">
@@ -99,14 +98,14 @@
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                        <size key="customSize" width="260" height="60"/>
+                                        <size key="customSize" width="255" height="60"/>
                                         <connections>
                                             <outlet property="title" destination="ryA-P2-TGh" id="thm-zU-rAz"/>
                                             <outlet property="userImageView" destination="CPR-FU-JMe" id="rJE-jM-RfH"/>
                                         </connections>
                                     </collectionViewCell>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="AvatarCell" id="1Ol-ep-qo8" customClass="SSUserCollectionAvatarCell">
-                                        <rect key="frame" x="100" y="70" width="60" height="60"/>
+                                        <rect key="frame" x="98" y="70" width="60" height="60"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
@@ -150,6 +149,14 @@
                             </collectionView>
                         </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="TRX-ml-kY4" firstAttribute="top" secondItem="Yb7-qo-mjM" secondAttribute="bottom" constant="8" id="1Sf-B6-Ur4"/>
+                            <constraint firstItem="Yb7-qo-mjM" firstAttribute="top" secondItem="pUc-Mo-NOa" secondAttribute="top" id="QH9-2K-QxN"/>
+                            <constraint firstAttribute="trailing" secondItem="Yb7-qo-mjM" secondAttribute="trailing" id="TEt-rK-SdY"/>
+                            <constraint firstItem="TRX-ml-kY4" firstAttribute="leading" secondItem="pUc-Mo-NOa" secondAttribute="leading" id="VZx-jk-K5n"/>
+                            <constraint firstItem="t1I-VZ-C0P" firstAttribute="top" secondItem="TRX-ml-kY4" secondAttribute="bottom" id="eav-3r-Dz4"/>
+                            <constraint firstItem="Yb7-qo-mjM" firstAttribute="leading" secondItem="pUc-Mo-NOa" secondAttribute="leading" id="l9R-Ln-5cF"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="egJ-Pl-3R8"/>
                     <connections>

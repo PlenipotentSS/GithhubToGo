@@ -10,9 +10,9 @@
 #import "SSFrontViewController.h"
 #import "SSBackViewController.h"
 
-#define Menu_Offset 40.f
-
 @interface SSSplitViewController () <UIGestureRecognizerDelegate>
+
+@property (nonatomic) CGFloat maxOpenSplits;
 
 @end
 
@@ -45,6 +45,7 @@
     self.backViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"menu"];
     [self.view addSubview:self.backViewController.view];
     [self addChildViewController:self.backViewController];
+    [self.backViewController didMoveToParentViewController:self];
     SSBackViewController *menuVC = (SSBackViewController*)[[self.backViewController viewControllers] firstObject];
     
     //self.menuController.view.frame = CGRectMake(-Menu_Offset, 0.f, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame));
@@ -52,12 +53,11 @@
     self.frontViewController = (UINavigationController *)[self.storyboard instantiateViewControllerWithIdentifier:@"detail"];
     [self.view addSubview:self.frontViewController.view];
     [self addChildViewController:self.frontViewController];
+    [self.frontViewController didMoveToParentViewController:self];
     
     SSFrontViewController *detailVC = (SSFrontViewController*)[[self.frontViewController viewControllers] firstObject];
     
     [menuVC setDetailViewController:detailVC];
-    [menuVC setTheSplitController:self];
-    [detailVC setTheSplitController:self];
     
     self.frontViewController.navigationController.navigationBar.hidden = NO;
     
@@ -80,28 +80,52 @@
     [self.frontViewController.view addGestureRecognizer:pan];
 }
 
+-(CGRect) getBackViewRectOrigin {
+    CGRect backFrame = self.backViewController.view.frame;
+    backFrame.origin.x = -Menu_Offset;
+    return backFrame;
+}
+
+-(CGRect) getBackViewRectOpen {
+    CGRect backFrame = self.backViewController.view.frame;
+    backFrame.origin.x = 0.f;
+    return backFrame;
+}
 
 #pragma mark - top view controller motions from menu
 -(void)showMenuFullScreen {
+    CGRect newFrontFrame = self.frontViewController.view.frame;
+    newFrontFrame.origin.x = CGRectGetWidth(self.frontViewController.view.frame);
+    newFrontFrame.origin.y = 0.f;
     [UIView animateWithDuration:.4f animations:^{
-        self.frontViewController.view.frame= CGRectMake(CGRectGetWidth(self.view.frame), 0.f, CGRectGetWidth(self.frontViewController.view.frame), CGRectGetHeight(self.frontViewController.view.frame));
-        self.backViewController.view.frame = CGRectMake(0, 0.f, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame));
+        self.frontViewController.view.frame= newFrontFrame;
+        self.backViewController.view.frame = [self getBackViewRectOpen];
     }];
     self.menuStateInView = MenuCompletelyOpened;
 }
 
 -(void)showMenuSplit {
+    CGRect newFrontFrame = self.frontViewController.view.frame;
+    CGFloat newXOrigin = CGRectGetWidth(self.frontViewController.view.frame)-(.2*CGRectGetWidth(self.frontViewController.view.frame));
+    if (newXOrigin > MAX_OPEN_SPACE) {
+        newXOrigin = MAX_OPEN_SPACE;
+    }
+    newFrontFrame.origin.x = newXOrigin;
+    newFrontFrame.origin.y = 0.f;
     [UIView animateWithDuration:.4f animations:^{
-        self.frontViewController.view.frame= CGRectMake(CGRectGetWidth(self.view.frame)-(.2*CGRectGetWidth(self.view.frame)), 0.f, CGRectGetWidth(self.frontViewController.view.frame), CGRectGetHeight(self.frontViewController.view.frame));
-        self.backViewController.view.frame = CGRectMake(0, 0.f, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame));
+        self.frontViewController.view.frame= newFrontFrame;
+        self.backViewController.view.frame = [self getBackViewRectOpen];
     }];
     self.menuStateInView = MenuOpened;
 }
 
 -(void)hideMenu {
+    CGRect newFrontFrame = self.frontViewController.view.frame;
+    newFrontFrame.origin.x = 0.f;
+    newFrontFrame.origin.y = 0.f;
     [UIView animateWithDuration:.4f animations:^{
-        self.frontViewController.view.frame= CGRectMake(0.f, 0.f, CGRectGetWidth(self.frontViewController.view.frame), CGRectGetHeight(self.frontViewController.view.frame));
-        self.backViewController.view.frame = CGRectMake(-Menu_Offset, 0.f, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame));
+        self.frontViewController.view.frame= newFrontFrame;
+        self.backViewController.view.frame = [self getBackViewRectOrigin];
     }];
     self.menuStateInView = MenuCompletelyHidden;
 }
@@ -128,7 +152,7 @@
             if (menuTranslation > self.view.center.x) {
                 menuTranslation = self.view.center.x;
             }
-            self.backViewController.view.center = CGPointMake(menuTranslation, self.frontViewController.view.center.y);
+            //self.backViewController.view.center = CGPointMake(menuTranslation, self.frontViewController.view.center.y);
         }
     }
     if (pan.state == UIGestureRecognizerStateEnded) {

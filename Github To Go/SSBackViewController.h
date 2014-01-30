@@ -13,6 +13,5 @@
 @interface SSBackViewController : UIViewController
 
 @property (nonatomic) SSFrontViewController *detailViewController;
-@property (nonatomic) SSSplitViewController *theSplitController;
 
 @end

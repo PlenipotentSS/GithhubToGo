@@ -13,4 +13,8 @@
 #ifdef __OBJC__
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
+
+
+    #define Menu_Offset 40.f
+    #define MAX_OPEN_SPACE 256.f
 #endif

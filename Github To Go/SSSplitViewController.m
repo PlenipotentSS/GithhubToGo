@@ -80,17 +80,7 @@
     [self.frontViewController.view addGestureRecognizer:pan];
 }
 
--(CGRect) getBackViewRectOrigin {
-    CGRect backFrame = self.backViewController.view.frame;
-    backFrame.origin.x = -Menu_Offset;
-    return backFrame;
-}
-
--(CGRect) getBackViewRectOpen {
-    CGRect backFrame = self.backViewController.view.frame;
-    backFrame.origin.x = 0.f;
-    return backFrame;
-}
+///////// VIEW CONTROLLER FRAME SETS WITH ROTATIONS
 
 #pragma mark - top view controller motions from menu
 -(void)showMenuFullScreen {
@@ -131,6 +121,20 @@
 }
 
 
+-(CGRect) getBackViewRectOrigin {
+    CGRect backFrame = self.backViewController.view.frame;
+    backFrame.origin.x = -Menu_Offset;
+    return backFrame;
+}
+
+-(CGRect) getBackViewRectOpen {
+    CGRect backFrame = self.backViewController.view.frame;
+    backFrame.origin.x = 0.f;
+    return backFrame;
+}
+
+///////// END VIEW CONTROLLER FRAME SETS WITH ROTATIONS
+
 #pragma mark - pan Gesture Actions
 -(void)slidePanel:(id) sender {
     UIPanGestureRecognizer *pan = (UIPanGestureRecognizer *)sender;
@@ -156,7 +160,7 @@
         }
     }
     if (pan.state == UIGestureRecognizerStateEnded) {
-        if ((self.frontViewController.view.frame.origin.x <= self.view.frame.size.width/2 && velocity.x < 1200.f) || velocity.x <-1200.f ) {
+        if ((self.frontViewController.view.frame.origin.x <= self.view.frame.size.width/2 && velocity.x < 1200.f) || velocity.x < -1200.f ) {
             [self hideMenu];
             self.menuStateInView = MenuCompletelyHidden;
         } else if (velocity.x >= 1200.f || self.frontViewController.view.frame.origin.x > self.view.frame.size.width/2) {

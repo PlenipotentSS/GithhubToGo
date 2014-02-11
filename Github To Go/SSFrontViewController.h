@@ -12,7 +12,7 @@
 
 @interface SSFrontViewController : UIViewController <UISplitViewControllerDelegate>
 
-@property (strong, nonatomic) SSGitHubUser *detailItem;
+@property (strong, nonatomic) id detailItem;
 
 @property (weak, nonatomic) IBOutlet UIWebView *detailWebView;
 

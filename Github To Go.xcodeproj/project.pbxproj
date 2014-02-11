@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D204C25518AA93E0004EC849 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D204C25418AA93E0004EC849 /* CoreData.framework */; };
 		D265DFF41896D1E300E8A68F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D265DFF31896D1E300E8A68F /* Foundation.framework */; };
 		D265DFF61896D1E300E8A68F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D265DFF51896D1E300E8A68F /* CoreGraphics.framework */; };
 		D265DFF81896D1E300E8A68F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D265DFF71896D1E300E8A68F /* UIKit.framework */; };
@@ -25,11 +26,12 @@
 		D265E0251896D1E300E8A68F /* Github_To_GoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D265E0241896D1E300E8A68F /* Github_To_GoTests.m */; };
 		D265E0301896D30000E8A68F /* SSNetworkController.m in Sources */ = {isa = PBXBuildFile; fileRef = D265E02F1896D30000E8A68F /* SSNetworkController.m */; };
 		D265E07F189717CC00E8A68F /* SSSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D265E07E189717CC00E8A68F /* SSSplitViewController.m */; };
+		D268C5EE18AAB07000C9BFFC /* SSGitHubRepo.m in Sources */ = {isa = PBXBuildFile; fileRef = D268C5ED18AAB07000C9BFFC /* SSGitHubRepo.m */; };
+		D2C8E42B18AA99AC007DC8F9 /* Github_To_Go.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D2C8E42918AA99AC007DC8F9 /* Github_To_Go.xcdatamodeld */; };
 		D2D431A318988A1100263948 /* SSUserCollectionAvatarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D2D431A218988A1100263948 /* SSUserCollectionAvatarCell.m */; };
 		D2D431A618988BAB00263948 /* SSSearchCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = D2D431A518988BAB00263948 /* SSSearchCollectionView.m */; };
 		D2D431A91898927100263948 /* SSGitHubUser.m in Sources */ = {isa = PBXBuildFile; fileRef = D2D431A81898927100263948 /* SSGitHubUser.m */; };
 		D2D431AC189892D800263948 /* SSRepoCollectionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D2D431AB189892D800263948 /* SSRepoCollectionCell.m */; };
-		D2D431B21898B86200263948 /* SSGitHubRepo.m in Sources */ = {isa = PBXBuildFile; fileRef = D2D431B11898B86200263948 /* SSGitHubRepo.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,6 +45,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D204C25418AA93E0004EC849 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		D265DFF01896D1E300E8A68F /* Github To Go.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Github To Go.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D265DFF31896D1E300E8A68F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D265DFF51896D1E300E8A68F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -69,6 +72,9 @@
 		D265E02F1896D30000E8A68F /* SSNetworkController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSNetworkController.m; sourceTree = "<group>"; };
 		D265E07D189717CC00E8A68F /* SSSplitViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSSplitViewController.h; sourceTree = "<group>"; };
 		D265E07E189717CC00E8A68F /* SSSplitViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSSplitViewController.m; sourceTree = "<group>"; };
+		D268C5EC18AAB07000C9BFFC /* SSGitHubRepo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSGitHubRepo.h; sourceTree = "<group>"; };
+		D268C5ED18AAB07000C9BFFC /* SSGitHubRepo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSGitHubRepo.m; sourceTree = "<group>"; };
+		D2C8E42A18AA99AC007DC8F9 /* Github_To_Go.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Github_To_Go.xcdatamodel; sourceTree = "<group>"; };
 		D2D431A118988A1100263948 /* SSUserCollectionAvatarCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSUserCollectionAvatarCell.h; sourceTree = "<group>"; };
 		D2D431A218988A1100263948 /* SSUserCollectionAvatarCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSUserCollectionAvatarCell.m; sourceTree = "<group>"; };
 		D2D431A418988BAB00263948 /* SSSearchCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSSearchCollectionView.h; sourceTree = "<group>"; };
@@ -77,8 +83,6 @@
 		D2D431A81898927100263948 /* SSGitHubUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSGitHubUser.m; sourceTree = "<group>"; };
 		D2D431AA189892D800263948 /* SSRepoCollectionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSRepoCollectionCell.h; sourceTree = "<group>"; };
 		D2D431AB189892D800263948 /* SSRepoCollectionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSRepoCollectionCell.m; sourceTree = "<group>"; };
-		D2D431B01898B86200263948 /* SSGitHubRepo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSGitHubRepo.h; sourceTree = "<group>"; };
-		D2D431B11898B86200263948 /* SSGitHubRepo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSGitHubRepo.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +90,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D204C25518AA93E0004EC849 /* CoreData.framework in Frameworks */,
 				D265DFF61896D1E300E8A68F /* CoreGraphics.framework in Frameworks */,
 				D265DFF81896D1E300E8A68F /* UIKit.framework in Frameworks */,
 				D265DFF41896D1E300E8A68F /* Foundation.framework in Frameworks */,
@@ -140,6 +145,7 @@
 		D265DFF21896D1E300E8A68F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D204C25418AA93E0004EC849 /* CoreData.framework */,
 				D265DFF31896D1E300E8A68F /* Foundation.framework */,
 				D265DFF51896D1E300E8A68F /* CoreGraphics.framework */,
 				D265DFF71896D1E300E8A68F /* UIKit.framework */,
@@ -153,6 +159,7 @@
 			children = (
 				D265E0021896D1E300E8A68F /* SSAppDelegate.h */,
 				D265E0031896D1E300E8A68F /* SSAppDelegate.m */,
+				D2C8E42918AA99AC007DC8F9 /* Github_To_Go.xcdatamodeld */,
 				D265E0051896D1E300E8A68F /* Main_iPhone.storyboard */,
 				D265E0081896D1E300E8A68F /* Main_iPad.storyboard */,
 				D23C966118977B1700BC207E /* View */,
@@ -199,8 +206,8 @@
 				D265E02F1896D30000E8A68F /* SSNetworkController.m */,
 				D2D431A71898927100263948 /* SSGitHubUser.h */,
 				D2D431A81898927100263948 /* SSGitHubUser.m */,
-				D2D431B01898B86200263948 /* SSGitHubRepo.h */,
-				D2D431B11898B86200263948 /* SSGitHubRepo.m */,
+				D268C5EC18AAB07000C9BFFC /* SSGitHubRepo.h */,
+				D268C5ED18AAB07000C9BFFC /* SSGitHubRepo.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -323,12 +330,13 @@
 				D265E0301896D30000E8A68F /* SSNetworkController.m in Sources */,
 				D2D431A91898927100263948 /* SSGitHubUser.m in Sources */,
 				D265E07F189717CC00E8A68F /* SSSplitViewController.m in Sources */,
+				D268C5EE18AAB07000C9BFFC /* SSGitHubRepo.m in Sources */,
 				D265E00D1896D1E300E8A68F /* SSBackViewController.m in Sources */,
 				D265E0101896D1E300E8A68F /* SSFrontViewController.m in Sources */,
+				D2C8E42B18AA99AC007DC8F9 /* Github_To_Go.xcdatamodeld in Sources */,
 				D2D431AC189892D800263948 /* SSRepoCollectionCell.m in Sources */,
 				D2D431A618988BAB00263948 /* SSSearchCollectionView.m in Sources */,
 				D2D431A318988A1100263948 /* SSUserCollectionAvatarCell.m in Sources */,
-				D2D431B21898B86200263948 /* SSGitHubRepo.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -563,6 +571,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		D2C8E42918AA99AC007DC8F9 /* Github_To_Go.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				D2C8E42A18AA99AC007DC8F9 /* Github_To_Go.xcdatamodel */,
+			);
+			currentVersion = D2C8E42A18AA99AC007DC8F9 /* Github_To_Go.xcdatamodel */;
+			path = Github_To_Go.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = D265DFE81896D1E300E8A68F /* Project object */;
 }

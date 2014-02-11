@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface SSGitHubUser : NSObject
+@interface SSGitHubUser : NSManagedObject
 
 @property (nonatomic) NSString *name;
 @property (nonatomic) NSString *imageURLString;
@@ -16,6 +16,8 @@
 @property (nonatomic) UIImage *userImage;
 @property (nonatomic) BOOL isDownloading;
 
+-(id) initWithEntity:(NSEntityDescription *)entity insertIntoManagedObjectContext:(NSManagedObjectContext *)context withJsonDictionary:(NSDictionary*)json;
 -(void)downloadUserAvatar;
+-(void) parseJsonDictionary:(NSDictionary *) json;
 
 @end

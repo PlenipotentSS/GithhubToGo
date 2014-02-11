@@ -10,8 +10,12 @@
 #import "SSFrontViewController.h"
 @class SSSplitViewController;
 
-@interface SSBackViewController : UIViewController
+@interface SSBackViewController : UIViewController <NSFetchedResultsControllerDelegate>
 
 @property (nonatomic) SSFrontViewController *detailViewController;
+
+@property (strong,nonatomic) NSManagedObjectContext *managedObjectContext;
+@property (strong, nonatomic) NSFetchedResultsController *userFetchedResultsController;
+@property (strong, nonatomic) NSFetchedResultsController *repoFetchedResultsController;
 
 @end

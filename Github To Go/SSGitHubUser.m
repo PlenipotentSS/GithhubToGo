@@ -10,12 +10,35 @@
 
 @implementation SSGitHubUser
 
+@dynamic name;
+@dynamic html_url;
+@dynamic imageURLString;
+@dynamic isDownloading;
+@synthesize userImage;
+
 -(void)downloadUserAvatar
 {
-    _isDownloading = YES;
+    self.isDownloading = YES;
     NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:[self imageURLString]]];
-    _userImage = [UIImage imageWithData:imageData];
-    _isDownloading = NO;
+    self.userImage = [UIImage imageWithData:imageData];
+    self.isDownloading = NO;
+}
+
+-(id) initWithEntity:(NSEntityDescription *)entity insertIntoManagedObjectContext:(NSManagedObjectContext *)context withJsonDictionary:(NSDictionary*)json
+{
+    self = [super initWithEntity:entity insertIntoManagedObjectContext:context];
+    if (self) {
+        [self parseJsonDictionary:json];
+    }
+    return self;
+}
+
+-(void) parseJsonDictionary:(NSDictionary *) json
+{
+    self.name = json[@"login"];
+    self.html_url = json[@"html_url"];
+    self.imageURLString = json[@"avatar_url"];
+    [self.managedObjectContext save:nil];
 }
 
 @end

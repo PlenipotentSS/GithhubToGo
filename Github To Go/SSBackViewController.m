@@ -17,8 +17,9 @@
 
 #import "SSUserCollectionAvatarCell.h"
 #import "SSRepoCollectionCell.h"
+#import "SSAppDelegate.h"
 
-@interface SSBackViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITextFieldDelegate>
+@interface SSBackViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITextFieldDelegate, NSFetchedResultsControllerDelegate>
 
 @property (nonatomic) NSMutableArray *repos;
 @property (nonatomic) NSMutableArray *usersArray;
@@ -48,6 +49,9 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    
+    SSAppDelegate *appDel = [[UIApplication sharedApplication] delegate];
+    self.managedObjectContext = appDel.managedObjectContext;
     
     self.repos = [[NSMutableArray alloc] init];
     self.usersArray = [[NSMutableArray alloc] init];
@@ -101,48 +105,145 @@
     [self.theCollectionView reloadData];
 }
 
+- (void) clearRepoSearchResults
+{
+    id <NSFetchedResultsSectionInfo> sectionInfo = [self.repoFetchedResultsController sections][0];
+    NSInteger forCount = [sectionInfo numberOfObjects];
+    for (NSInteger i = 0; i < forCount; i ++) {
+        NSIndexPath * indexPath = [NSIndexPath indexPathForRow:i inSection:0];
+        SSGitHubRepo * repo = [self.repoFetchedResultsController objectAtIndexPath:indexPath];
+        NSLog(@"%@",repo);
+        [self.managedObjectContext deleteObject:repo];
+    }
+}
+
+- (void) clearUsersSearchResults
+{
+    id <NSFetchedResultsSectionInfo> sectionInfo = [self.userFetchedResultsController sections][0];
+    NSInteger forCount = [sectionInfo numberOfObjects];
+    for (NSInteger i = 0; i < forCount; i ++) {
+        NSIndexPath * indexPath = [NSIndexPath indexPathForRow:i inSection:0];
+        SSGitHubUser * user = [self.userFetchedResultsController objectAtIndexPath:indexPath];
+        NSLog(@"%@",user);
+        [self.managedObjectContext deleteObject:user];
+    }
+}
 
 #pragma mark -UITextFieldDelegate
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
 {
+    
     if ([textField.text length] > 0) {
         __weak SSBackViewController *weakSelf = self;
         if (self.isSearchingUsers) {
+            [self clearUsersSearchResults];
             [[SSNetworkController sharedController] usersForSearchString:textField.text andCompletion:^(NSArray *result) {
                 if ([result count] > 0) {
                     [weakSelf.searches removeObjectAtIndex:0];
                     [weakSelf.searches insertObject:textField.text atIndex:0];
-                    
                     [weakSelf createUsersFromArray:result];
                     
-                    weakSelf.detailViewController.detailItem = weakSelf.usersArray[0];
-                    [weakSelf.detailViewController configureView];
-                    [weakSelf.theCollectionView reloadData];
-                    [textField resignFirstResponder];
+                    //[self updateSearchWithArray:result andSelf:weakSelf andSearchArrayType:weakSelf.usersArray forType:@"User"];
                 }
             }];
             
         } else {
+            [self clearRepoSearchResults];
             __weak SSBackViewController *weakSelf = self;
             [[SSNetworkController sharedController] reposForSearchString:textField.text andCompletion:^(NSArray *result) {
                 if ([result count] > 0) {
                     [weakSelf.searches removeObjectAtIndex:1];
                     [weakSelf.searches insertObject:textField.text atIndex:1];
-                    
                     [weakSelf createReposFromArray:result];
-                    
-                    weakSelf.detailViewController.detailItem = weakSelf.repos[0];
-                    [weakSelf.detailViewController configureView];
-                    [weakSelf.theCollectionView reloadData];
-                    [textField resignFirstResponder];
+                    //[self updateSearchWithArray:result andSelf:weakSelf andSearchArrayType:weakSelf.repos forType:@"Repo"];
                 }
             }];
         }
         
+        [textField resignFirstResponder];
         return YES;
     } else {
         return NO;  
     }
+}
+
+//-(void) updateSearchWithArray: (NSArray*) result andSelf:(SSBackViewController*) weakSelf andSearchArrayType:(NSMutableArray*)objectArray forType:(NSString*) RepoOrName {
+//    
+//    weakSelf.detailViewController.detailItem = objectArray[0];
+//    [weakSelf.detailViewController configureView];
+//
+//    for (SSGitHubRepo *repo in objectArray) {
+//
+//        if ([RepoOrName isEqualToString:@"Repo"]) {
+////            NSEntityDescription *entityDiscription = [NSEntityDescription entityForName:@"SSGitHubRepo" inManagedObjectContext:self.managedObjectContext];
+////            SSGitHubRepo *repo = [[SSGitHubRepo alloc] initWithEntity:entityDiscription insertIntoManagedObjectContext:self.managedObjectContext];
+////            
+////            repo.title = [dictionary objectForKey:@"name"];
+////            repo.html_url = [dictionary objectForKey:@"html_url"];
+//        } else {
+//            NSEntityDescription *entityDiscription = [NSEntityDescription entityForName:@"SSGitHubUser" inManagedObjectContext:self.managedObjectContext];
+//            SSGitHubUser *user = [[SSGitHubUser alloc] initWithEntity:entityDiscription insertIntoManagedObjectContext:self.managedObjectContext];
+//            
+//            user.name = [dictionary objectForKey:@"name"];
+//            user.html_url = [dictionary objectForKey:@"html_url"];
+//            [user.managedObjectContext save:nil];
+//        }
+//    }
+//}
+
+-(NSFetchedResultsController*) repoFetchedResultsController
+{
+    if (_repoFetchedResultsController == nil) {
+        NSFetchRequest * request = [[NSFetchRequest alloc] init];
+        NSEntityDescription *entityDescription = [NSEntityDescription entityForName:@"SSGitHubRepo" inManagedObjectContext:self.managedObjectContext];
+        request.entity = entityDescription;
+        request.fetchBatchSize = 25;
+        
+        NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
+     
+        request.sortDescriptors = @[descriptor];
+        
+        NSFetchedResultsController *fetchController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:@"SSGitHubRepo"];
+        self.repoFetchedResultsController = fetchController;
+        self.repoFetchedResultsController.delegate = self;
+        NSError *error;
+        if(![self.repoFetchedResultsController performFetch:&error]) {
+            if (error) {
+                NSLog(@"error: %@",error);
+            }
+        }
+        
+    }
+    return _repoFetchedResultsController;
+}
+
+-(NSFetchedResultsController*) userFetchedResultsController
+{
+    if (_userFetchedResultsController == nil) {
+        NSFetchRequest * request = [[NSFetchRequest alloc] init];
+        NSEntityDescription *entityDescription = [NSEntityDescription entityForName:@"SSGitHubUser" inManagedObjectContext:self.managedObjectContext];
+        request.entity = entityDescription;
+        request.fetchBatchSize = 25;
+        
+        NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
+        
+        request.sortDescriptors = @[descriptor];
+        
+        NSFetchedResultsController *fetchController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:@"SSGitHubUser"];
+        self.userFetchedResultsController = fetchController;
+        self.userFetchedResultsController.delegate = self;
+        [self.userFetchedResultsController performFetch:nil];
+        
+    }
+    return _userFetchedResultsController;
+}
+
+#pragma mark - FetchedResultsControllerDelegate
+
+
+-(void)controllerDidChangeContent:(NSFetchedResultsController *)controller
+{
+    [self.theCollectionView reloadData];
 }
 
 #pragma mark - array population
@@ -150,24 +251,22 @@
 {
     [self.usersArray removeAllObjects];
     for (NSDictionary *userInfo in searchArray) {
-        SSGitHubUser *user = [SSGitHubUser new];
-        user.name = userInfo[@"login"];
-        user.html_url = userInfo[@"html_url"];
-        user.imageURLString = userInfo[@"avatar_url"];
+        NSEntityDescription *entityDescription = [NSEntityDescription entityForName:@"SSGitHubUser" inManagedObjectContext:self.managedObjectContext];
+        SSGitHubRepo *user = [[SSGitHubRepo alloc] initWithEntity:entityDescription insertIntoManagedObjectContext:self.managedObjectContext withJsonDictionary:userInfo];
+        [user.managedObjectContext save:nil];
         [self.usersArray addObject:user];
     }
 }
 
 -(void)createReposFromArray:(NSArray*)searchArray
 {
+
     [self.repos removeAllObjects];
     for (NSDictionary *userInfo in searchArray) {
-        SSGitHubRepo *user = [SSGitHubRepo new];
-        user.title = userInfo[@"name"];
-        user.html_url = userInfo[@"html_url"];
-        user.name = userInfo[@"owner"][@"login"];
-        user.imageURLString = userInfo[@"owner"][@"avatar_url"];
-        [self.repos addObject:user];
+        NSEntityDescription *entityDescription = [NSEntityDescription entityForName:@"SSGitHubRepo" inManagedObjectContext:self.managedObjectContext];
+        SSGitHubRepo *repo = [[SSGitHubRepo alloc] initWithEntity:entityDescription insertIntoManagedObjectContext:self.managedObjectContext withJsonDictionary:userInfo];
+        [repo.managedObjectContext save:nil];
+        [self.repos addObject:repo];
     }
 }
 
@@ -253,11 +352,19 @@
 
 #pragma mark - UICollectionView DataSource
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    
     if (self.isSearchingUsers) {
-        return [self.usersArray count];
+        id <NSFetchedResultsSectionInfo> sectionInfo = [self.userFetchedResultsController sections][section];
+        return [sectionInfo numberOfObjects];
     } else {
-        return [self.repos count];
+        id <NSFetchedResultsSectionInfo> sectionInfo = [self.repoFetchedResultsController sections][section];
+        return [sectionInfo numberOfObjects];
     }
+//    if (self.isSearchingUsers) {
+//        return [self.usersArray count];
+//    } else {
+//        return [self.repos count];
+//    }
 }
 
 -(CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -303,7 +410,10 @@
 {
     if (self.isSearchingUsers) {
         SSUserCollectionAvatarCell *cell = (SSUserCollectionAvatarCell*)[self.theCollectionView dequeueReusableCellWithReuseIdentifier:@"AvatarCell" forIndexPath:indexPath];
-        SSGitHubUser *user = self.usersArray[indexPath.row];
+        
+        
+        SSGitHubUser *user = [self.userFetchedResultsController objectAtIndexPath:indexPath];
+
         if (user.userImage) {
             cell.userImageView.image = user.userImage;
         } else if (user.imageURLString) {
@@ -314,35 +424,41 @@
         return cell;
     } else {
         SSRepoCollectionCell *cell = (SSRepoCollectionCell*)[self.theCollectionView dequeueReusableCellWithReuseIdentifier:@"RepoCell" forIndexPath:indexPath];
-        SSGitHubRepo *user = self.repos[indexPath.row];
-        if (user.userImage) {
-            cell.userImageView.image = user.userImage;
-        } else if (user.imageURLString) {
+        
+        
+        SSGitHubRepo *repo = [self.repoFetchedResultsController objectAtIndexPath:indexPath];
+        
+        if (repo.userImage) {
+            cell.userImageView.image = repo.userImage;
+        } else if (repo.imageURLString) {
             [self loadUserAvatarAtIndex:indexPath];
         }
         [cell configureCell];
-        [cell.title setText:[user title]];
+        [cell.title setText:[repo title]];
         [cell.title sizeThatFits:cell.title.frame.size];
         return cell;
     }
 }
 
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         if (self.isSearchingUsers) {
-            SSGitHubUser *object = self.usersArray[indexPath.row];
-            self.detailViewController.detailItem = object;
+            SSGitHubUser *user = [self.userFetchedResultsController objectAtIndexPath:indexPath];
+            self.detailViewController.detailItem = user;
         } else {
-            SSGitHubRepo *object = self.repos[indexPath.row];
-            self.detailViewController.detailItem = object;
+            
+            SSGitHubRepo *repo = [self.repoFetchedResultsController objectAtIndexPath:indexPath];
+            self.detailViewController.detailItem = repo;
         }
     } else {
         if (self.isSearchingUsers) {
-            SSGitHubUser *object = self.usersArray[indexPath.row];
-            self.detailViewController.detailItem = object;
+            SSGitHubUser *user = [self.userFetchedResultsController objectAtIndexPath:indexPath];
+            self.detailViewController.detailItem = user;
         } else {
-            SSGitHubRepo *object = self.repos[indexPath.row];
-            self.detailViewController.detailItem = object;
+            
+            SSGitHubRepo *repo = [self.repoFetchedResultsController objectAtIndexPath:indexPath];
+            self.detailViewController.detailItem = repo;
         }
         [self.detailViewController configureView];
         [(SSSplitViewController*)self.parentViewController.parentViewController hideMenu];

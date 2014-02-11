@@ -12,8 +12,8 @@
 
 + (SSNetworkController*) sharedController;
 
-- (NSArray *)reposForSearchString: (NSString *) searchString;
+- (void)reposForSearchString: (NSString *) searchString andCompletion:(void(^)(NSArray* result))callback;
 
--(NSArray *)usersForSearchString: (NSString*) searchString;
+-(void)usersForSearchString: (NSString*) searchString andCompletion:(void(^)(NSArray* result))callback;
 
 @end

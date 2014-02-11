@@ -106,37 +106,43 @@
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     if ([textField.text length] > 0) {
+        __weak SSBackViewController *weakSelf = self;
         if (self.isSearchingUsers) {
-            NSArray *userSearch = [[SSNetworkController sharedController] usersForSearchString:textField.text];
-            if ([userSearch count] > 0) {
-                [self.searches removeObjectAtIndex:0];
-                [self.searches insertObject:textField.text atIndex:0];
-                
-                [self createUsersFromArray:userSearch];
-                
-                self.detailViewController.detailItem = self.usersArray[0];
-                [self.detailViewController configureView];
-                [self.theCollectionView reloadData];
-                [textField resignFirstResponder];
-                return YES;
-            }
+            [[SSNetworkController sharedController] usersForSearchString:textField.text andCompletion:^(NSArray *result) {
+                if ([result count] > 0) {
+                    [weakSelf.searches removeObjectAtIndex:0];
+                    [weakSelf.searches insertObject:textField.text atIndex:0];
+                    
+                    [weakSelf createUsersFromArray:result];
+                    
+                    weakSelf.detailViewController.detailItem = weakSelf.usersArray[0];
+                    [weakSelf.detailViewController configureView];
+                    [weakSelf.theCollectionView reloadData];
+                    [textField resignFirstResponder];
+                }
+            }];
+            
         } else {
-            NSArray *repoSearch = [[SSNetworkController sharedController] reposForSearchString:textField.text];
-            if ([repoSearch count] > 0) {
-                [self.searches removeObjectAtIndex:1];
-                [self.searches insertObject:textField.text atIndex:1];
-                
-                [self createReposFromArray:repoSearch];
-                
-                self.detailViewController.detailItem = self.repos[0];
-                [self.detailViewController configureView];
-                [self.theCollectionView reloadData];
-                [textField resignFirstResponder];
-                return YES;
-            }
+            __weak SSBackViewController *weakSelf = self;
+            [[SSNetworkController sharedController] reposForSearchString:textField.text andCompletion:^(NSArray *result) {
+                if ([result count] > 0) {
+                    [weakSelf.searches removeObjectAtIndex:1];
+                    [weakSelf.searches insertObject:textField.text atIndex:1];
+                    
+                    [weakSelf createReposFromArray:result];
+                    
+                    weakSelf.detailViewController.detailItem = weakSelf.repos[0];
+                    [weakSelf.detailViewController configureView];
+                    [weakSelf.theCollectionView reloadData];
+                    [textField resignFirstResponder];
+                }
+            }];
         }
+        
+        return YES;
+    } else {
+        return NO;  
     }
-    return NO;
 }
 
 #pragma mark - array population

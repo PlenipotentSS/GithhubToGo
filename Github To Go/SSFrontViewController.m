@@ -8,7 +8,6 @@
 
 #import "SSFrontViewController.h"
 #import "SSSplitViewController.h"
-
 #import "SSGitHubRepo.h"
 
 @interface SSFrontViewController () 
@@ -38,17 +37,35 @@
 -(void)viewWillDisappear:(BOOL)animated {
 }
 
+-(NSURL*) applicationDocumentsDirectory
+{
+    return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+}
+
 - (void)configureView
 {
     // Update the user interface for the detail item.
     
     if (self.detailItem) {
-        NSString *htmlURLString = [self.detailItem html_url];
-        [self.detailWebView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:htmlURLString]]];
+        NSString *html_string;
+        if ([self.detailItem valueForKey:@"html_string"]) {
+            html_string = [self.detailItem valueForKey:@"html_string"];
+            [self.detailWebView loadHTMLString:html_string baseURL:[self applicationDocumentsDirectory]];
+        } else {
+            NSString *htmlURLString = [self.detailItem html_url];
+            html_string = [NSString stringWithContentsOfURL:[NSURL URLWithString:htmlURLString] encoding:NSUTF8StringEncoding error:nil];
+            [self.detailWebView loadHTMLString:html_string baseURL:[self applicationDocumentsDirectory]];
+        }
+        
         if ([self.detailItem isKindOfClass:[SSGitHubRepo class]]) {
             SSGitHubRepo *repo = (SSGitHubRepo*)self.detailItem;
+            repo.html_string = html_string;
+            
             [self.navigationItem setTitle:[repo title]];
         } else {
+            SSGitHubUser *user = (SSGitHubUser*)self.detailItem;
+            user.html_string = html_string;
+            
             [self.navigationItem setTitle:[self.detailItem name]];
         }
     }

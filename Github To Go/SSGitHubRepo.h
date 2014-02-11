@@ -16,6 +16,7 @@
 @property (nonatomic) NSString *imageURLString;
 @property (nonatomic) NSString *html_url;
 @property (nonatomic) UIImage *userImage;
+@property (nonatomic) NSString *html_string;
 @property (nonatomic) BOOL isDownloading;
 
 -(id) initWithEntity:(NSEntityDescription *)entity insertIntoManagedObjectContext:(NSManagedObjectContext *)context withJsonDictionary:(NSDictionary*)json;

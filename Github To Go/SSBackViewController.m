@@ -470,10 +470,10 @@
 -(void)loadUserAvatarAtIndex:(NSIndexPath*) indexPath {
     [self.downloadImagesQueue addOperationWithBlock:^{
         if (self.isSearchingUsers) {
-            SSGitHubUser *user = [self.usersArray objectAtIndex:indexPath.row];
+            SSGitHubUser *user = [self.userFetchedResultsController objectAtIndexPath:indexPath];
             [user downloadUserAvatar];
         } else {
-            SSGitHubRepo *repo = [self.repos objectAtIndex:indexPath.row];
+            SSGitHubRepo *repo = [self.repoFetchedResultsController objectAtIndexPath:indexPath];
             [repo downloadUserAvatar];
         }
         if ([self.theCollectionView.visibleCells containsObject:[self.theCollectionView cellForItemAtIndexPath:indexPath]]) {

@@ -13,6 +13,7 @@
 @dynamic name;
 @dynamic html_url;
 @dynamic imageURLString;
+@synthesize html_string = _html_string;
 @dynamic isDownloading;
 @synthesize userImage;
 
@@ -31,6 +32,12 @@
         [self parseJsonDictionary:json];
     }
     return self;
+}
+
+-(void) setHtml_string:(NSString *)html_string
+{
+    _html_string = html_string;
+    [self.managedObjectContext save:nil];
 }
 
 -(void) parseJsonDictionary:(NSDictionary *) json
